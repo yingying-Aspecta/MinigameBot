@@ -39,8 +39,8 @@ db = firestore.client()
 
 def get_cmd_count(user):
     if not user.bot:
-        doc_ref = db.collection('leaderboard').document(u'{}'.format(user.id))
-        cmd_count_ref = doc_ref.get({u'cmd_count'}).to_dict()
+        doc_ref = db.collection('leaderboard').document(str(user.id))
+        cmd_count_ref = doc_ref.get({'cmd_count'}).to_dict()
         if cmd_count_ref is not None:
             return cmd_count_ref.get('cmd_count')
         return 0
@@ -48,10 +48,10 @@ def get_cmd_count(user):
 
 def update_cmd_count(user):
     if not user.bot:
-        doc_ref = db.collection(u'leaderboard').document(u'{}'.format(user.id))  # what is u?
+        doc_ref = db.collection('leaderboard').document(str(user.id))
         curr_count = get_cmd_count(user)
         doc_ref.set({
-            u'cmd_count': curr_count + 1
+            'cmd_count': curr_count + 1
         })
 
 
@@ -59,19 +59,19 @@ def update_cmd_count(user):
 
 def get_coin_count(user):
     if not user.bot:
-        doc_ref = db.collection('leaderboard').document(u'{}'.format(user.id))
-        cmd_count_ref = doc_ref.get({u'coins'}).to_dict()
-        if cmd_count_ref is not None:
-            return cmd_count_ref.get('coins')
+        doc_ref = db.collection('leaderboard').document('{}'.format(user.id))  # what is u?
+        coin_count_ref = doc_ref.get({'coins'}).to_dict()
+        if coin_count_ref is not None:
+            return coin_count_ref.get('coins')
         return 0
 
 
 def update_coin_count(user, addCoins):
     if not user.bot:
-        doc_ref = db.collection(u'leaderboard').document(u'{}'.format(user.id))  # what is u?
+        doc_ref = db.collection('leaderboard').document('{}'.format(user.id))
         curr_coins = get_coin_count(user)
         doc_ref.set({
-            u'coins': curr_coins + addCoins
+            'coins': curr_coins + addCoins
         })
 
 
