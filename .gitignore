@@ -1,0 +1,4 @@
+# .gitignore file for MinigameBot
+
+# local file that keeps important tokens
+tokens.txt
