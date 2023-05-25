@@ -7,18 +7,32 @@ Selena Zhou, May 2023
 import discord
 import os
 from dotenv import load_dotenv
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
 """CONFIGURATIONS"""
 
+# .env
 load_dotenv()
 
+# Discord
 intents = discord.Intents.default()
 intents.members = True
 intents.presences = True
-intents.message_content = True
+intents.message_content = True      # important!!
 client = discord.Client(intents=intents)
 
 TOKEN = os.environ.get('TOKEN')
+
+# Firebase
+PATH_TO_JSON = os.environ.get('PATH_TO_JSON')
+cred = credentials.Certificate(PATH_TO_JSON)
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+"""FUNCTIONS"""
 
 """EVENTS"""
 
