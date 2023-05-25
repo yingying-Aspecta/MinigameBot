@@ -10,11 +10,15 @@ from dotenv import load_dotenv
 
 """CONFIGURATIONS"""
 
-intents = discord.Intents.default()     # not necessary for default, but may be helpful later
-intents.members = True
-client = discord.Client(intents=intents)
-TOKEN = os.environ.get('TOKEN')
 load_dotenv()
+
+intents = discord.Intents.default()
+intents.members = True
+intents.presences = True
+intents.message_content = True
+client = discord.Client(intents=intents)
+
+TOKEN = os.environ.get('TOKEN')
 
 """EVENTS"""
 
@@ -26,7 +30,19 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.content.startswith("mini "):
-        await message.channel.send("Hello!")
+
+    if message.guild is not None:
+
+        if message.author == client.user:
+            return
+
+        msg = message.content.lower()
+        print(msg)
+
+        if msg.startswith("mini"):
+            if msg.startswith("mini hi"):
+                await message.channel.send("Hello!")
+            else:
+                await message.channel.send("I don't recognize that command.")
 
 client.run(TOKEN)
