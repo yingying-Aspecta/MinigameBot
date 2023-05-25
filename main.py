@@ -1,16 +1,32 @@
-# This is a sample Python script.
+"""
+MinigameBot: Discord bot with different mini games.
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+Selena Zhou, May 2023
+"""
+
+import discord
+import os
+from dotenv import load_dotenv
+
+"""CONFIGURATIONS"""
+
+intents = discord.Intents.default()     # not necessary for default, but may be helpful later
+intents.members = True
+client = discord.Client(intents=intents)
+TOKEN = os.environ.get('TOKEN')
+load_dotenv()
+
+"""EVENTS"""
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+@client.event
+async def on_ready():
+    print("We have logged in as {0.user}".format(client))
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+@client.event
+async def on_message(message):
+    if message.content.startswith("mini "):
+        await message.channel.send("Hello!")
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+client.run(TOKEN)
