@@ -137,25 +137,28 @@ async def on_message(message):
 
         if msg.startswith("mini"):
 
-            update_cmd_count(message.author)
-
             if msg.startswith("mini help"):
                 embed = embed_mini_help()
                 await message.channel.send(embed=embed)
             elif msg.startswith("mini cc"):
+                update_cmd_count(message.author)            # counts this command call first, but doesn't double count
                 embed = embed_mini_cc(message.author)
                 await message.channel.send(embed=embed)
+                return
             elif msg.startswith("mini bal"):
                 embed = embed_mini_coins(message.author)
                 await message.channel.send(embed=embed)
-                # coin_count = get_coin_count(message.author)
-                # await message.channel.send(f"Your balance is {coin_count} coins, {message.author}!")
             elif msg.startswith("mini run"):
                 embed = embed_mini_construction()
                 await message.channel.send(embed=embed)
             elif msg.startswith("mini bj"):
                 embed = embed_mini_construction()
                 await message.channel.send(embed=embed)
+            else:
+                await message.channel.send("I don't recognize that command!")
+                return
+
+            update_cmd_count(message.author)
 
 
 client.run(TOKEN)
