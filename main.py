@@ -112,6 +112,12 @@ def update_coin_count(user, addCoins):
         })
 
 
+"""GAMES"""
+
+# Endless Runner
+
+# Blackjack
+
 """EVENTS"""
 
 
