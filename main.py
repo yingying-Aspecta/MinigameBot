@@ -35,6 +35,27 @@ db = firestore.client()
 """FUNCTIONS"""
 
 
+# HELPER EMBEDS
+
+def embed_mini_construction():
+    embed = discord.Embed(title=":construction: This command is under construction...",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    return embed
+
+
+def embed_mini_help():
+    embed = discord.Embed(title=":dart: MinigameBot Command Guide",
+                          description="Here is a complete list of all MinigameBot's commands!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    embed.add_field(name=":question: Need help?", value="`mini help`: A complete list of our features.")
+    embed.add_field(name=":zap: Get stats!", value="`mini cc`: How many commands have you sent?")
+    embed.add_field(name=":coin: Your balance.", value="`mini bal`: Tells you your coin balance.")
+    embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
+    embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
+    embed.add_field(name='\u200B', value='\u200B')
+    return embed
+
+
 # FIRESTORE: Count commands
 
 def get_cmd_count(user):
@@ -59,9 +80,9 @@ def update_cmd_count(user):
 
 def get_coin_count(user):
     if not user.bot:
-        doc_ref = db.collection('leaderboard').document('{}'.format(user.id))  # what is u?
+        doc_ref = db.collection('leaderboard').document('{}'.format(user.id))
         coin_count_ref = doc_ref.get({'coins'}).to_dict()
-        if coin_count_ref is not None:
+        if coin_count_ref.get('coins') is not None:
             return coin_count_ref.get('coins')
         return 0
 
@@ -91,16 +112,26 @@ async def on_message(message):
             return
 
         msg = message.content.lower()
-        print(msg)
 
         if msg.startswith("mini"):
 
             update_cmd_count(message.author)
 
-            if msg.startswith("mini hi"):
-                await message.channel.send("Hello!")
-            elif msg.startswith("mini cc"):       # count commands
+            if msg.startswith("mini help"):
+                embed = embed_mini_help()
+                await message.channel.send(embed=embed)
+            elif msg.startswith("mini cc"):
                 command_count = get_cmd_count(message.author)
                 await message.channel.send(f"You have sent me {command_count} commands, {message.author}!")
+            elif msg.startswith("mini bal"):
+                coin_count = get_coin_count(message.author)
+                await message.channel.send(f"Your balance is {coin_count} coins, {message.author}!")
+            elif msg.startswith("mini run"):
+                embed = embed_mini_construction()
+                await message.channel.send(embed=embed)
+            elif msg.startswith("mini bj"):
+                embed = embed_mini_construction()
+                await message.channel.send(embed=embed)
+
 
 client.run(TOKEN)
