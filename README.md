@@ -22,10 +22,10 @@ and to practice using Firestore cloud storage to store information in real time.
 
 ## Gameplay
 
-![screencap of bot](screencaps/mini-help.png "mini help")
-![screencap of bot](screencaps/mini-cc.png "mini cc")
-![screencap of bot](screencaps/mini-bal.png "mini bal")
-![screencap of bot](screencaps/mini-games.png "mini games")
+<img src="screencaps/mini-help.png" alt="mini help" width="75%" height="75%">
+<img src="screencaps/mini-cc.png" alt="mini cc" width="50%" height="50%">
+<img src="screencaps/mini-bal.png" alt="mini bal" width="50%" height="50%">
+<img src="screencaps/mini-games.png" alt="mini games" width="55%" height="55%">
 
 ## Tags
 
