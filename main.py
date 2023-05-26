@@ -155,7 +155,7 @@ async def on_message(message):
                 embed = embed_mini_construction()
                 await message.channel.send(embed=embed)
             else:
-                await message.channel.send("I don't recognize that command!")
+                await message.channel.send("I don't recognize that command! Try `mini help` for a list of all my features.")
                 return
 
             update_cmd_count(message.author)
