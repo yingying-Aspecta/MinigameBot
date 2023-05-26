@@ -38,7 +38,8 @@ db = firestore.client()
 # HELPER EMBEDS
 
 def embed_mini_construction():
-    embed = discord.Embed(title=":construction: This command is under construction...",
+    embed = discord.Embed(title=":construction: This command is under construction... :construction:",
+                          description="Come back soon :)",
                           colour=discord.Colour.from_rgb(106, 13, 255))
     return embed
 
@@ -53,6 +54,21 @@ def embed_mini_help():
     embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
     embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
     embed.add_field(name='\u200B', value='\u200B')
+    return embed
+
+
+def embed_mini_cc(user):
+    embed = discord.Embed(title=f":computer: {user.name}'s command count",
+                          description=f"You have sent me {get_cmd_count(user)} commands!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    return embed
+
+
+def embed_mini_coins(user):
+    embed = discord.Embed(title=f":money_with_wings: {user.name}'s Bank Account",
+                          description=f"{user.mention} - Earn more coins by playing mini games!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    embed.add_field(name="Your balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
     return embed
 
 
@@ -121,11 +137,13 @@ async def on_message(message):
                 embed = embed_mini_help()
                 await message.channel.send(embed=embed)
             elif msg.startswith("mini cc"):
-                command_count = get_cmd_count(message.author)
-                await message.channel.send(f"You have sent me {command_count} commands, {message.author}!")
+                embed = embed_mini_cc(message.author)
+                await message.channel.send(embed=embed)
             elif msg.startswith("mini bal"):
-                coin_count = get_coin_count(message.author)
-                await message.channel.send(f"Your balance is {coin_count} coins, {message.author}!")
+                embed = embed_mini_coins(message.author)
+                await message.channel.send(embed=embed)
+                # coin_count = get_coin_count(message.author)
+                # await message.channel.send(f"Your balance is {coin_count} coins, {message.author}!")
             elif msg.startswith("mini run"):
                 embed = embed_mini_construction()
                 await message.channel.send(embed=embed)
