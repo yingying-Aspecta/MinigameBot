@@ -22,7 +22,10 @@ and to practice using Firestore cloud storage to store information in real time.
 
 ## Gameplay
 
-[//]: # (![screencap of gameplay]&#40;path "title"&#41;)
+![screencap of bot](screencaps/mini-help.png "mini help")
+![screencap of bot](screencaps/mini-cc.png "mini cc")
+![screencap of bot](screencaps/mini-bal.png "mini bal")
+![screencap of bot](screencaps/mini-games.png "mini games")
 
 ## Tags
 
