@@ -10,7 +10,7 @@ Minigame Bot is a Discord bot written in Python that hosts a variety of embedded
 #### TODO:
 - [x] User command count (connect with Firestore DB)
 - [x] Coin purse and balance (connect with Firestore DB)
-- [ ] Leaderboard for both cmds and coins (connect with Firestore DB)
+- [ ] Leaderboard for coins (connect with Firestore DB)
 - [ ] Classic 'endless runner' game (embedded in message, with react controls)
 - [ ] Blackjack game (embedded in message, with reacts)
 - [ ] Connect to hosting (e.g. Heroku) to keep bot running

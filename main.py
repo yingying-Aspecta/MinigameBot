@@ -8,8 +8,7 @@ import discord
 import os
 from dotenv import load_dotenv
 import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import credentials, firestore
 
 """CONFIGURATIONS"""
 
@@ -70,6 +69,13 @@ def embed_mini_coins(user):
                           colour=discord.Colour.from_rgb(106, 13, 255))
     embed.add_field(name="Your balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
     return embed
+
+
+def embed_leaderboard(guild):
+    embed = discord.Embed(title=f":trophy: {guild.name}'s Coin Leaderboard",
+                          color=discord.Colour.from_rgb(106, 13, 255))
+    max_members = 10
+    leaderboard_list = ""
 
 
 # FIRESTORE: Count commands
