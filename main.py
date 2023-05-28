@@ -1,5 +1,5 @@
 """
-MinigameBot: Discord bot with different mini games.
+MinigameBot: Discord bot with different mini-games.
 
 Selena Zhou, May 2023
 """
@@ -33,7 +33,6 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-"""FUNCTIONS"""
 
 """FIRESTORE FUNCTIONS"""
 
@@ -107,9 +106,9 @@ def embed_mini_help():
                           description="Here is a complete list of all MinigameBot's commands!",
                           colour=discord.Colour.from_rgb(106, 13, 255))
     embed.add_field(name=":question: Need help?", value="`mini help`: A complete list of our features.", inline=False)
-    embed.add_field(name=":trophy: Leaderboard", value="`mini lead`: See the top 10 richest users!")
     embed.add_field(name=":zap: Get stats!", value="`mini cc`: How many commands have you sent?")
     embed.add_field(name=":coin: Your balance", value="`mini bal`: Tells you your coin balance.")
+    embed.add_field(name=":trophy: Leaderboard", value="`mini lead`: See the top 10 richest users!")
     embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
     embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
     embed.add_field(name=':gift: Mystery box', value='`mini box`: What prize can you win?')
