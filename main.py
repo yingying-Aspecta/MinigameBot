@@ -5,6 +5,7 @@ Selena Zhou, May 2023
 """
 
 import discord
+from discord.ext import commands
 import os
 from dotenv import load_dotenv
 import firebase_admin
@@ -20,7 +21,8 @@ intents = discord.Intents.default()
 intents.members = True
 intents.presences = True
 intents.message_content = True  # important!!
-client = discord.Client(intents=intents)
+intents.reactions = True
+client = commands.Bot(command_prefix='mini ', intents=intents)
 
 TOKEN = os.environ.get('TOKEN')
 
@@ -33,49 +35,7 @@ db = firestore.client()
 
 """FUNCTIONS"""
 
-
-# HELPER EMBEDS
-
-def embed_mini_construction():
-    embed = discord.Embed(title=":construction: This command is under construction... :construction:",
-                          description="Come back soon :)",
-                          colour=discord.Colour.from_rgb(106, 13, 255))
-    return embed
-
-
-def embed_mini_help():
-    embed = discord.Embed(title=":dart: MinigameBot Command Guide",
-                          description="Here is a complete list of all MinigameBot's commands!",
-                          colour=discord.Colour.from_rgb(106, 13, 255))
-    embed.add_field(name=":question: Need help?", value="`mini help`: A complete list of our features.")
-    embed.add_field(name=":zap: Get stats!", value="`mini cc`: How many commands have you sent?")
-    embed.add_field(name=":coin: Your balance.", value="`mini bal`: Tells you your coin balance.")
-    embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
-    embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
-    embed.add_field(name='\u200B', value='\u200B')
-    return embed
-
-
-def embed_mini_cc(user):
-    embed = discord.Embed(title=f":computer: {user.name}'s command count",
-                          description=f"You have sent me {get_cmd_count(user)} commands!",
-                          colour=discord.Colour.from_rgb(106, 13, 255))
-    return embed
-
-
-def embed_mini_coins(user):
-    embed = discord.Embed(title=f":money_with_wings: {user.name}'s Bank Account",
-                          description=f"{user.mention} - Earn more coins by playing mini games!",
-                          colour=discord.Colour.from_rgb(106, 13, 255))
-    embed.add_field(name="Your balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
-    return embed
-
-
-def embed_leaderboard(guild):
-    embed = discord.Embed(title=f":trophy: {guild.name}'s Coin Leaderboard",
-                          color=discord.Colour.from_rgb(106, 13, 255))
-    max_members = 10
-    leaderboard_list = ""
+"""FIRESTORE FUNCTIONS"""
 
 
 # FIRESTORE: Count commands
@@ -118,13 +78,7 @@ def update_coin_count(user, addCoins):
         })
 
 
-"""GAMES"""
-
-# Endless Runner
-
-# Blackjack
-
-"""EVENTS"""
+"""LOG-IN"""
 
 
 @client.event
@@ -132,39 +86,82 @@ async def on_ready():
     print("We have logged in as {0.user}".format(client))
 
 
-@client.event
-async def on_message(message):
-    if message.guild is not None:
+"""COMMANDS"""
 
-        if message.author == client.user:
-            return
 
-        msg = message.content.lower()
+# mini help
 
-        if msg.startswith("mini"):
+def embed_mini_help():
+    embed = discord.Embed(title=":dart: MinigameBot Command Guide",
+                          description="Here is a complete list of all MinigameBot's commands!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    embed.add_field(name=":question: Need help?", value="`mini help`: A complete list of our features.")
+    embed.add_field(name=":zap: Get stats!", value="`mini cc`: How many commands have you sent?")
+    embed.add_field(name=":coin: Your balance.", value="`mini bal`: Tells you your coin balance.")
+    embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
+    embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
+    embed.add_field(name='\u200B', value='\u200B')
+    return embed
 
-            if msg.startswith("mini help"):
-                embed = embed_mini_help()
-                await message.channel.send(embed=embed)
-            elif msg.startswith("mini cc"):
-                update_cmd_count(message.author)            # counts this command call first, but doesn't double count
-                embed = embed_mini_cc(message.author)
-                await message.channel.send(embed=embed)
-                return
-            elif msg.startswith("mini bal"):
-                embed = embed_mini_coins(message.author)
-                await message.channel.send(embed=embed)
-            elif msg.startswith("mini run"):
-                embed = embed_mini_construction()
-                await message.channel.send(embed=embed)
-            elif msg.startswith("mini bj"):
-                embed = embed_mini_construction()
-                await message.channel.send(embed=embed)
-            else:
-                await message.channel.send("I don't recognize that command! Try `mini help` for a list of all my features.")
-                return
 
-            update_cmd_count(message.author)
+class MiniHelp(commands.HelpCommand):
 
+    async def send_bot_help(self, mapping):
+        update_cmd_count(self.context.message.author)
+        embed = embed_mini_help()
+        await self.context.send(embed=embed)
+
+
+client.help_command = MiniHelp()
+
+# mini cc
+
+def embed_mini_cc(user):
+    embed = discord.Embed(title=f":computer: {user.name}'s command count",
+                          description=f"You have sent me {get_cmd_count(user)} commands!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    return embed
+
+
+@client.command(name="cc")
+async def mini_cc(ctx):
+    update_cmd_count(ctx.message.author)
+    embed = embed_mini_cc(ctx.message.author)
+    await ctx.send(embed=embed)
+
+
+"""GAMES"""
+
+# Endless Runner
+
+# Blackjack
+
+"""HELPER FUNCTIONS"""
+
+
+def embed_mini_construction():
+    embed = discord.Embed(title=":construction: This command is under construction... :construction:",
+                          description="Come back soon :)",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    return embed
+
+
+
+
+
+
+def embed_mini_coins(user):
+    embed = discord.Embed(title=f":money_with_wings: {user.name}'s Bank Account",
+                          description=f"{user.mention} - Earn more coins by playing mini games!",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    embed.add_field(name="Your balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
+    return embed
+
+
+def embed_leaderboard(guild):
+    embed = discord.Embed(title=f":trophy: {guild.name}'s Coin Leaderboard",
+                          color=discord.Colour.from_rgb(106, 13, 255))
+    max_members = 10
+    leaderboard_list = ""
 
 client.run(TOKEN)
