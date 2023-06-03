@@ -14,6 +14,7 @@ Minigame Bot is a Discord bot written in Python that hosts a variety of embedded
 - [ ] Classic 'endless runner' game (embedded in message, with react controls)
 - [ ] Blackjack game (embedded in message, with reacts)
 - [ ] Mystery box randomizer
+- [ ] Potentially inventory? -> < Help | Leaderboard | Stats > < Inventory | Balance | Mystery Box > < Games >
 - [ ] Connect to hosting (e.g. Heroku) to keep bot running
 
 ## Purpose
