@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, firestore
+from random import randint
 
 """CONFIGURATIONS"""
 
@@ -53,7 +54,8 @@ def update_cmd_count(user):
         doc_ref = db.collection('leaderboard').document(str(user.id))
         curr_count = get_cmd_count(user)
         doc_ref.set({
-            'cmd_count': curr_count + 1
+            'cmd_count': curr_count + 1,
+            'coins': get_coin_count(user)
         })
 
 
@@ -73,6 +75,7 @@ def update_coin_count(user, addCoins):
         doc_ref = db.collection('leaderboard').document('{}'.format(user.id))
         curr_coins = get_coin_count(user)
         doc_ref.set({
+            'cmd_count': get_cmd_count(user),
             'coins': curr_coins + addCoins
         })
 
@@ -111,7 +114,7 @@ def embed_mini_help():
     embed.add_field(name=":trophy: Leaderboard", value="`mini lead`: See the top 10 richest users!")
     embed.add_field(name=":person_running: Endless Runner", value="`mini run`: The Endless Runner game.")
     embed.add_field(name=":black_joker: Blackjack", value="`mini bj`: Play Blackjack with us.")
-    embed.add_field(name=':gift: Mystery box', value='`mini box`: What prize can you win?')
+    embed.add_field(name=':gift: Mystery box', value='`mini gift`: What prize can you win?')
     return embed
 
 
@@ -164,6 +167,26 @@ def embed_leaderboard(guild):
     leaderboard_list = ""
 
 
+# mini box
+
+@client.command(name="gift")
+# @commands.cooldown(1, 10, commands.BucketType.user)
+async def mini_gift(ctx):
+    update_cmd_count(ctx.message.author)
+    embed = embed_mini_gift(ctx.message.author)
+    await ctx.send(embed=embed)
+
+
+def embed_mini_gift(user):
+    embed = discord.Embed(title=f":gift: Opening mystery box... :gift:",
+                          colour=discord.Colour.from_rgb(106, 13, 255))
+    random_coin = randint(1, 100)
+    embed.add_field(name="", value=f"{user.mention} your gift is: {random_coin} :coin:!")
+    update_coin_count(user, random_coin)
+    embed.add_field(name="Your new balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
+    return embed
+
+
 """GAMES"""
 
 
@@ -185,6 +208,13 @@ async def mini_bj(ctx):
 
 
 """HELPER FUNCTIONS"""
+
+
+# @client.event
+# async def on_command_error(ctx, error):
+#     if isinstance(error, commands.CommandOnCooldown):
+#         embed = discord.Embed(title=":ice: Cooldown: try again in {:2f} seconds!".format(error.retry_after))
+#         await ctx.send(embed=embed)
 
 
 def embed_mini_construction():
