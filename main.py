@@ -170,7 +170,7 @@ def embed_leaderboard(guild):
 # mini box
 
 @client.command(name="gift")
-# @commands.cooldown(1, 10, commands.BucketType.user)
+@commands.cooldown(1, 3600, commands.BucketType.user)
 async def mini_gift(ctx):
     update_cmd_count(ctx.message.author)
     embed = embed_mini_gift(ctx.message.author)
@@ -180,7 +180,7 @@ async def mini_gift(ctx):
 def embed_mini_gift(user):
     embed = discord.Embed(title=f":gift: Opening mystery box... :gift:",
                           colour=discord.Colour.from_rgb(106, 13, 255))
-    random_coin = randint(1, 100)
+    random_coin = randint(1, 50)
     embed.add_field(name="", value=f"{user.mention} your gift is: {random_coin} :coin:!")
     update_coin_count(user, random_coin)
     embed.add_field(name="Your new balance:", value=f"{get_coin_count(user)} :coin:", inline=False)
@@ -210,11 +210,13 @@ async def mini_bj(ctx):
 """HELPER FUNCTIONS"""
 
 
-# @client.event
-# async def on_command_error(ctx, error):
-#     if isinstance(error, commands.CommandOnCooldown):
-#         embed = discord.Embed(title=":ice: Cooldown: try again in {:2f} seconds!".format(error.retry_after))
-#         await ctx.send(embed=embed)
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        embed = discord.Embed(title=":ice_cube: Cooldown!",
+                              description="Try again in {:.0f} minutes!".format(error.retry_after/60),
+                              colour=discord.Colour.from_rgb(106, 13, 255))
+        await ctx.send(embed=embed)
 
 
 def embed_mini_construction():
