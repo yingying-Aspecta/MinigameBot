@@ -214,7 +214,7 @@ async def mini_bj(ctx):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         embed = discord.Embed(title=":ice_cube: Cooldown!",
-                              description="Try again in {:.0f} minutes!".format(error.retry_after/60),
+                              description="Try again in {:.0f} minutes.".format(error.retry_after/60),
                               colour=discord.Colour.from_rgb(106, 13, 255))
         await ctx.send(embed=embed)
 
