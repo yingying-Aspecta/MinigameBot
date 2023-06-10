@@ -23,6 +23,7 @@ intents.members = True
 intents.presences = True
 intents.message_content = True  # important!!
 intents.reactions = True
+intents.guilds = True
 client = commands.Bot(command_prefix='mini ', intents=intents)
 
 TOKEN = os.environ.get('TOKEN')
@@ -156,15 +157,53 @@ def embed_mini_coins(user):
 @client.command(name="lead")
 async def mini_lead(ctx):
     update_cmd_count(ctx.message.author)
-    embed = embed_mini_construction()
+    print(ctx.guild.id)
+    embed = embed_leaderboard(ctx.guild.id)
     await ctx.send(embed=embed)
 
 
-def embed_leaderboard(guild):
-    embed = discord.Embed(title=f":trophy: {guild.name}'s Coin Leaderboard",
+def embed_leaderboard(guild_id):
+    guild = client.get_guild(guild_id)
+    print(guild.name)
+    embed = discord.Embed(title=f":trophy: {guild.name}'s Coin Leaderboard :trophy:",
+                          description="",
                           color=discord.Colour.from_rgb(106, 13, 255))
+
+    # sort members by their coin amount
+    members_info = []
+    for user in guild.members:
+        if not user.bot:
+            members_info.append((user, get_coin_count(user)))
+    members_info.sort(key=lambda x: x[1], reverse=True)
+
+    print(members_info)
+
     max_members = 10
     leaderboard_list = ""
+
+    index = 0
+    for user in members_info:
+        # ensure only top 10 members are shown
+        index += 1
+        if index > max_members:
+            break
+        # number top three
+        if index == 1:
+            leaderboard_list += ":first_place: "
+        elif index == 2:
+            leaderboard_list += ":second_place: "
+        elif index == 3:
+            leaderboard_list += ":third_place: "
+        # add info in format "**coin_bal** - username"
+        else:
+            leaderboard_list += ":bouquet: "
+        leaderboard_list += f"**{user[1]}** - {user[0]}"
+
+    if leaderboard_list == "":
+        leaderboard_list = f"There are no active members in {guild.name}. Run `mini help` to earn coins!"
+
+    embed.add_field(name="", value=leaderboard_list)
+    return embed
 
 
 # mini box
